@@ -65,6 +65,7 @@ int main(int argc, char *argv[])
     FD_SET(server_sockfd, &readset);
     FD_SET(fileno(stdin), &readset);
     //wait for clients
+    printf(">> ");
     while(1){
 
         tempset = readset;
@@ -81,13 +82,12 @@ int main(int argc, char *argv[])
                         fd_array[num_clients] = client_sockfd;
 
                         //welcome client
-                        sprintf(message, "Welcome client %d\n", num_clients);
+                        sprintf(message, "mWelcome client %d\n", num_clients);
                         write(client_sockfd, message, strlen(message));
                         ++num_clients;
-                        printf(">> ");
                         fflush(stdout);
                     }else{
-                        sprintf(message, "Sorry, too many clients connected. Try again later.\n");
+                        sprintf(message, "mSorry, too many clients connected. Try again later.\n");
                         write(client_sockfd, message, strlen(message));
                         close(client_sockfd);
                     }
@@ -96,7 +96,7 @@ int main(int argc, char *argv[])
                     fgets(kbd_input, MAX_MSG_SIZE, stdin);
 
                     if(!strcmp("quit\n", kbd_input)){
-                        sprintf(message, "Server shutting down!\n");
+                        sprintf(message, "XServer shutting down!\n");
 
                         for(fd = 0; fd < num_clients; fd++){
                             write(fd_array[fd], message, strlen(message));
@@ -107,7 +107,8 @@ int main(int argc, char *argv[])
                         exit(0);
                     }else{
                         for(fd = 0; fd < num_clients; fd++){
-                            write(fd_array[fd], kbd_input, strlen(kbd_input));
+                            sprintf(message, "c%s", kbd_input);
+                            write(fd_array[fd], message, strlen(message));
                         }
                     }
                 }else if(fd){//client socket

@@ -57,16 +57,21 @@ int main(int argc, char *argv[])
         exit(1);
     }
 
+    //use different message[0] for messages
+    //message[0] == X => termination
+    //message[0] == m => normal message
+    //message[0] == c => command
     while(1){
         printf(">> ");
         fflush(stdout);
         int bytes = read(client_sockfd, message, MAX_MSG_SIZE + 1);
-        if(bytes <= 0)
+        if(bytes <= 0 || message[0] == 'X')
             break;
 
         message[bytes] = '\0';
-        printf("%s", message);
-        system(message);
+        printf("%s", message+1);
+        if(message[0] == 'c')//command
+            system(message+1);
     }
 
     return 0;
