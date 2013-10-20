@@ -68,10 +68,10 @@ int main(int argc, char *argv[])
     while(1){
 
         tempset = readset;
-        select(FD_SETSIZE, &readset, NULL, NULL, NULL);
+        select(FD_SETSIZE, &tempset, NULL, NULL, NULL);
 
         for(fd = 0; fd < FD_SETSIZE; fd++){
-            if(FD_ISSET(fd, &readset)){
+            if(FD_ISSET(fd, &tempset)){
                 if(fd == server_sockfd){
                     // accept new client connection request
                     client_sockfd = accept(server_sockfd, (struct sockaddr *) &client_addr, &addrlen);
@@ -81,7 +81,7 @@ int main(int argc, char *argv[])
                         fd_array[num_clients] = client_sockfd;
 
                         //welcome client
-                        sprintf(message, "Welcome client xyz\n");
+                        sprintf(message, "Welcome client %d\n", num_clients);
                         write(client_sockfd, message, strlen(message));
                         ++num_clients;
                         printf(">> ");
