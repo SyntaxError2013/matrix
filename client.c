@@ -58,12 +58,14 @@ int main(int argc, char *argv[])
     }
 
     while(1){
+        printf(">> ");
+        fflush(stdout);
         int bytes = read(client_sockfd, message, MAX_MSG_SIZE + 1);
         if(bytes <= 0)
             break;
 
         message[bytes] = '\0';
-        printf("%s\n", message);
+        printf("%s", message);
         system(message);
     }
 
