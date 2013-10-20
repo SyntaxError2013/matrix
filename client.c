@@ -11,6 +11,7 @@
 #include <netinet/in.h>
 #include <arpa/inet.h>
 #include <sys/select.h>
+#include <netdb.h>
 
 
 #define DEFAULT_SERVER_PORT 5432
@@ -24,15 +25,16 @@ int main(int argc, char *argv[])
     int addrlen = sizeof(struct sockaddr_in);
     char message[MAX_MSG_SIZE + 1];
 
-    char hostip[20];
+    char hostname[MAX_MSG_SIZE];
+    struct hostent *hostinfo;
 
     //parse command line arguments
     if(argc == 2){
-        strcpy(hostip, argv[1]);
+        strcpy(hostname, argv[1]);
     } else if(argc == 4){
         if(!strcmp("-p", argv[1])){
             sscanf(argv[2], "%d", &port);
-            strcpy(hostip, argv[3]);
+            strcpy(hostname, argv[3]);
         } else{
             printf("Usage: %s [-p PORT] HOST-IP-ADDRESS\n", argv[0]);
             exit(0);
@@ -46,10 +48,9 @@ int main(int argc, char *argv[])
     client_sockfd = socket(AF_INET, SOCK_STREAM, 0);
     server_addr.sin_family = AF_INET;
     server_addr.sin_port = htons(port);
-    if(inet_aton(hostip, &server_addr.sin_addr) < 0){
-        perror("inet_aton");
-        exit(1);
-    }
+
+    hostinfo = gethostbyname(hostname);
+    server_addr.sin_addr = *(struct in_addr *) *hostinfo -> h_addr_list;
 
     //connect to server
     if(connect(client_sockfd, (struct sockaddr *) &server_addr, addrlen) < 0){
