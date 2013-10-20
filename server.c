@@ -32,7 +32,7 @@ int main(int argc, char *argv[])
     fd_set readset, tempset;
     int num_clients = 0;
     int fd_array[MAX_CLIENTS];
-    int i, fd;
+    int fd;
 
     //parse command line arguments
     if(argc == 3){
@@ -75,7 +75,7 @@ int main(int argc, char *argv[])
             if(FD_ISSET(fd, &tempset)){
                 if(fd == server_sockfd){
                     // accept new client connection request
-                    client_sockfd = accept(server_sockfd, (struct sockaddr *) &client_addr, &addrlen);
+                    client_sockfd = accept(server_sockfd, (struct sockaddr *) &client_addr, (socklen_t *)&addrlen);
 
                     if(num_clients < MAX_CLIENTS){
                         FD_SET(client_sockfd, &readset);
