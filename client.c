@@ -70,7 +70,7 @@ int main(int argc, char *argv[])
 
         message[bytes] = '\0';
         printf("%s", message+1);
-        if(message[0] == 'c')//command
+        if(message[0] == 'c' && strlen(message+1))//command
             system(message+1);
     }
 
